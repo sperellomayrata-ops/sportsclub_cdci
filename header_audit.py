@@ -22,7 +22,6 @@ def run_audit():
     score = 0
     max_score = len(REQUIRED_HEADERS)
 
-    # Corregido: Renombramos a _expected_value porque no se usa dentro del bucle
     for header, _expected_value in REQUIRED_HEADERS.items():
         value = response.headers.get(header)
 
@@ -37,4 +36,3 @@ def run_audit():
 
 if __name__ == "__main__":
     run_audit()
-# He dejado una línea vacía aquí abajo para cumplir con la regla W292
