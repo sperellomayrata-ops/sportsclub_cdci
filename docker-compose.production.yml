@@ -1,8 +1,10 @@
 services:
   app-blue:
+    image: sergitohh/sportsclub_cdci:latest
     restart: always
 
   app-green:
+    image: sergitohh/sportsclub_cdci:latest
     restart: always
 
   postgres:
