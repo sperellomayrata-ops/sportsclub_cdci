@@ -35,4 +35,3 @@ jobs:
           # Aquí especificamos tu repositorio exacto
           tags: |
             sergitohh/sportsclub_cdci:latest
-            sergitohh/sportsclub_cdci:${{ github.sha }}
