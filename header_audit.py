@@ -1,38 +1,43 @@
 import requests
 
 # The target URL
-URL = "http://localhost:8000"  # Cambia esto si es necesario
+# URL = "https://github.com/"
+URL = "http://localhost:8000/api/v1/core/addresses"
 
+# The "Must Have" Headers for a Secure Deployment
 REQUIRED_HEADERS = {
-    "X-Frame-Options": "DENY",
     "X-Content-Type-Options": "nosniff",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Frame-Options": "DENY",  # or SAMEORIGIN
+    "Strict-Transport-Security": "max-age",  # Only works if HTTPS is enabled!
+    "Content-Security-Policy": "default-src 'none'",  # For APIs, block everything
+    "Referrer-Policy": "same-origin",
 }
 
-def run_audit():
-    try:
-        response = requests.get(URL, timeout=10)
-    except requests.exceptions.RequestException as e:
-        print(f"Error connecting to {URL}: {e}")
-        return
-
+try:
+    response = requests.get(URL, timeout=30)
     print(f"Scanning {URL}")
     print(f"Status: {response.status_code}\n")
 
     score = 0
     max_score = len(REQUIRED_HEADERS)
 
-    for header, _expected_value in REQUIRED_HEADERS.items():
+    for header, expected_value in REQUIRED_HEADERS.items():
         value = response.headers.get(header)
 
         if value:
             # Check if value roughly matches expectation
-            print(f"[OK] {header}: {value}")
-            score += 1
+            if expected_value in value:
+                print(f"Found header {header} with value {value}")
+                score += 1
+            else:
+                print(f"Found header {header} but value differs")
+                print(f"\tExpected substring: {expected_value}")
+                print(f"\tActual: {value}")
+                score += 0.5  # Partial credit
         else:
-            print(f"[MISSING] {header}")
+            print(f"Missing header {header}")
 
-    print(f"\nSecurity Score: {score}/{max_score}")
+    print(f"\nYour security score: {score}/{max_score}")
 
-if __name__ == "__main__":
-    run_audit()
+except Exception as e:
+    print(f"Error connecting: {e}")
