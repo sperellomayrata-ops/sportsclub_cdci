@@ -30,6 +30,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./docker/app/Dockerfile
           push: true
           # Aquí especificamos tu repositorio exacto
           tags: |
